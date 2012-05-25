@@ -205,7 +205,7 @@ class BurpExtender(IBurpExtender):
                         yield HttpRequest(self._parse(item), _burp=self)
         else:
             for item in self._check_and_callback(self.getProxyHistory):
-                yield HttpRequest(self._parse(request), _burp=self)
+                yield HttpRequest(self._parse(item), _burp=self)
 
 
     @callback
