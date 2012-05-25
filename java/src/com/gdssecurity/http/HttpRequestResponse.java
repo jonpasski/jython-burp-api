@@ -52,9 +52,9 @@ public class HttpRequestResponse
     }
     
     public String getHighlight() throws Exception
-	{
-		return messageInfo.getHighlight();
-	}
+    {
+        return messageInfo.getHighlight();
+    }
     
     public String getHost()
     {
@@ -76,22 +76,22 @@ public class HttpRequestResponse
         return messageInfo.getProtocol();
     }
 
-	public byte[] getRequest() throws Exception
-	{
-		return messageInfo.getRequest();
-	}
+    public byte[] getRequest() throws Exception
+    {
+        return messageInfo.getRequest();
+    }
 
-	public String getRequestBody()
+    public String getRequestBody()
     {
         return requestBody;
     }
 
-	public TreeMap<String, String> getRequestHeaders()
+    public TreeMap<String, String> getRequestHeaders()
     {
         return requestHeaders;
     }
 
-	public String getRequestMethod()
+    public String getRequestMethod()
     {
         return requestMethod;
     }
@@ -107,9 +107,9 @@ public class HttpRequestResponse
     }
     
     public byte[] getResponse() throws Exception
-	{
-		return messageInfo.getResponse();
-	}
+    {
+        return messageInfo.getResponse();
+    }
     
     public String getResponseBody()
     {
@@ -147,9 +147,9 @@ public class HttpRequestResponse
     }
     
     public void setHighlight(String color) throws Exception
-	{
-		messageInfo.setHighlight(color);
-	}
+    {
+        messageInfo.setHighlight(color);
+    }
     
     public void setRequestBody(String requestBody)
     {
