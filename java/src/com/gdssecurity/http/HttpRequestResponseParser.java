@@ -98,8 +98,7 @@ public class HttpRequestResponseParser
         
         TreeMap<String, String> responseHeaders = getMessageHeaders(httpResponse.getAllHeaders());
         
-        HttpEntity responseEntity = serializer.deserialize(responseBuffer,
-                httpResponse);
+        HttpEntity responseEntity = serializer.deserialize(responseBuffer, httpResponse);
         
         String responseBody = EntityUtils.toString(responseEntity);
         
