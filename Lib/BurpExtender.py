@@ -8,9 +8,18 @@ BurpExtender is a proxied class that implements the burp.IBurpExtender
 interface. It is what makes Jython <-> Burp possible.
 '''
 from java.io import File
-from java.lang import System
+from java.lang import NoClassDefFoundError, System
 from org.python.util import JLineConsole, PythonInterpreter
 from burp import IBurpExtender
+
+try:
+    from com.gdssecurity.http import HttpRequestResponseParser
+
+    Parser = HttpRequestResponseParser()
+    _parse = Parser.parse
+
+except (ImportError, NoClassDefFoundError):
+    _parse = lambda msg:msg
 
 from threading import Thread
 import os
@@ -24,6 +33,8 @@ from gds.burp.menu import ConsoleMenu
 
 
 class BurpExtender(IBurpExtender):
+    def __init__(self):
+        self._parse = _parse
 
     def __repr__(self):
         return '<BurpExtender %#x>' % (id(self),)
@@ -188,13 +199,13 @@ class BurpExtender(IBurpExtender):
         '''
         if args:
             matchers = [re.compile(arg) for arg in args]
-            for request in self._check_and_callback(self.getProxyHistory):
+            for item in self._check_and_callback(self.getProxyHistory):
                 for matcher in matchers:
-                    if matcher.search(request.getUrl().toString()):
-                        yield HttpRequest(request, _burp=self)
+                    if matcher.search(item.getUrl().toString()):
+                        yield HttpRequest(self._parse(item), _burp=self)
         else:
-            for request in self._check_and_callback(self.getProxyHistory):
-                yield HttpRequest(request, _burp=self)
+            for item in self._check_and_callback(self.getProxyHistory):
+                yield HttpRequest(self._parse(request), _burp=self)
 
 
     @callback
@@ -214,7 +225,7 @@ class BurpExtender(IBurpExtender):
         '''
         for urlPrefix in urlPrefixes:
             for item in self._check_and_callback(self.getSiteMap, urlPrefix):
-                yield HttpRequest(item, _burp=self)
+                yield HttpRequest(self._parse(item), _burp=self)
 
 
     @callback

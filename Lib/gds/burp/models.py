@@ -42,26 +42,29 @@ class HttpRequest(object):
         self.cookies = SimpleCookie()
         self.body = None
 
-        if messageInfo is not None and hasattr(messageInfo, 'request'):
+        if messageInfo is not None:
             self.host = messageInfo.getHost()
             self.port = messageInfo.getPort()
             self.protocol = messageInfo.getProtocol()
             self.url = urlparse(messageInfo.getUrl().toString())
 
-            if messageInfo.getRequest():
+            if getattr(messageInfo, 'PROCESSED', False):
+                self._request = messageInfo.getMessageInfo().getRequest().tostring()
+                self.method = messageInfo.getRequestMethod()
+                self._uri = messageInfo.getRequestUri()
+                self.headers.update(messageInfo.getRequestHeaders())
+                self.body = messageInfo.getRequestBody()
+
+            elif messageInfo.getRequest():
                 self._request = messageInfo.getRequest().tostring()
 
                 self.method, self._uri, self.version, self.headers, self.body = \
                     _parse_message(self._request)
 
         self.parameters = _parse_parameters(self)
-        self.cookies.load(self.headers.get('cookie', ''))
+        self.cookies.load(str(self.headers.get('cookie', '')))
 
-        if hasattr(messageInfo, 'response'):
-            self.response = HttpResponse(getattr(messageInfo, 'response', None),
-                                         request=self)
-        else:
-            self.response = HttpResponse(None, request=self)
+        self.response = HttpResponse(messageInfo, request=self)
 
 
     def __contains__(self, item):
@@ -176,11 +179,24 @@ class HttpResponse(object):
         self.body = None
 
         if messageInfo is not None:
-            self._response = messageInfo.tostring()
-            self.version, self.status_code, self.reason, self.headers, self.body = \
-                _parse_message(self._response)
+            if getattr(messageInfo, 'PROCESSED', False):
+                if hasattr(messageInfo.getMessageInfo(), 'response'):
+                    _messageInfo = messageInfo.getMessageInfo()
+                    self._response = _messageInfo.getResponse().tostring()
 
-        self.cookies.load(self.headers.get('set-cookie', ''))
+                self.version = messageInfo.getResponseProtocolVersion()
+                self.status_code = messageInfo.getResponseStatus()
+                self.reason = messageInfo.getResponseReason()
+                self.headers.update(messageInfo.getResponseHeaders())
+                self.body = messageInfo.getResponseBody()
+
+            elif hasattr(messageInfo, 'response'):
+                self._response = messageInfo.getResponse().tostring()
+
+                self.version, self.status_code, self.reason, self.headers, \
+                    self.body = _parse_message(self._response)
+
+        self.cookies.load(str(self.headers.get('set-cookie', '')))
 
 
     def __contains__(self, item):
