@@ -51,6 +51,11 @@ public class HttpRequestResponse
         return messageInfo.getComment();
     }
     
+    public String getHighlight() throws Exception
+	{
+		return messageInfo.getHighlight();
+	}
+    
     public String getHost()
     {
         return messageInfo.getHost();
@@ -70,18 +75,23 @@ public class HttpRequestResponse
     {
         return messageInfo.getProtocol();
     }
-    
-    public String getRequestBody()
+
+	public byte[] getRequest() throws Exception
+	{
+		return messageInfo.getRequest();
+	}
+
+	public String getRequestBody()
     {
         return requestBody;
     }
-    
-    public TreeMap<String, String> getRequestHeaders()
+
+	public TreeMap<String, String> getRequestHeaders()
     {
         return requestHeaders;
     }
-    
-    public String getRequestMethod()
+
+	public String getRequestMethod()
     {
         return requestMethod;
     }
@@ -95,6 +105,11 @@ public class HttpRequestResponse
     {
         return requestUri;
     }
+    
+    public byte[] getResponse() throws Exception
+	{
+		return messageInfo.getResponse();
+	}
     
     public String getResponseBody()
     {
@@ -130,6 +145,11 @@ public class HttpRequestResponse
     {
         messageInfo.setComment(comment);
     }
+    
+    public void setHighlight(String color) throws Exception
+	{
+		messageInfo.setHighlight(color);
+	}
     
     public void setRequestBody(String requestBody)
     {

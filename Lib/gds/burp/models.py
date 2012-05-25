@@ -49,7 +49,7 @@ class HttpRequest(object):
             self.url = urlparse(messageInfo.getUrl().toString())
 
             if getattr(messageInfo, 'PROCESSED', False):
-                self._request = messageInfo.getMessageInfo().getRequest().tostring()
+                self._request = messageInfo.getRequest().tostring()
                 self.method = messageInfo.getRequestMethod()
                 self._uri = messageInfo.getRequestUri()
                 self.headers.update(messageInfo.getRequestHeaders())
@@ -180,9 +180,8 @@ class HttpResponse(object):
 
         if messageInfo is not None:
             if getattr(messageInfo, 'PROCESSED', False):
-                if hasattr(messageInfo.getMessageInfo(), 'response'):
-                    _messageInfo = messageInfo.getMessageInfo()
-                    self._response = _messageInfo.getResponse().tostring()
+                if messageInfo.getResponse():
+                    self._response = messageInfo.getResponse().tostring()
 
                 self.version = messageInfo.getResponseProtocolVersion()
                 self.status_code = messageInfo.getResponseStatus()

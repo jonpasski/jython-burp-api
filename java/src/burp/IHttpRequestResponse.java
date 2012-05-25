@@ -137,5 +137,19 @@ public interface IHttpRequestResponse
      * @throws Exception
      */
     void setComment(String comment) throws Exception;
+    
+    /**
+     * Returns the user-annotated color for this item, if applicable.
+     * 
+     * @return The user-annotated color for this item, or null if none is set.
+     */
+    String getHighlight() throws Exception;
+    
+    /**
+     * Sets the user-annotated color for this item.
+     * 
+     * @param highlight The color to be associated with this item.
+     */
+    void setHighlight(String color) throws Exception;
 
 }
